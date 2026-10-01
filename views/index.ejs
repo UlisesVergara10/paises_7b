@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CRUD Países y Provincias</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .contenedor {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #222;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        .seccion {
+            background: white;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        input,
+        select {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-agregar {
+            background-color: #198754;
+            color: white;
+        }
+
+        .btn-editar {
+            background-color: #ffc107;
+            color: black;
+        }
+
+        .btn-eliminar {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #343a40;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .form-editar {
+            display: inline;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="contenedor">
+
+    <h1>CRUD de Países y Provincias</h1>
+
+
+    <!-- ================================= -->
+    <!-- PAÍSES -->
+    <!-- ================================= -->
+
+    <div class="seccion">
+
+        <h2>Agregar país</h2>
+
+        <form action="/paises" method="POST">
+
+            <input
+                type="text"
+                name="pais_descrion"
+                placeholder="Nombre del país"
+                maxlength="50"
+                required
+            >
+
+            <button
+                type="submit"
+                class="btn-agregar"
+            >
+                Agregar país
+            </button>
+
+        </form>
+
+
+        <h2>Lista de países</h2>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>ID</th>
+
+                    <th>País</th>
+
+                    <th>Acciones</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <% paises.forEach(pais => { %>
+
+                    <tr>
+
+                        <td>
+                            <%= pais.pais_id %>
+                        </td>
+
+                        <td>
+                            <%= pais.pais_descrion %>
+                        </td>
+
+                        <td>
+
+                            <!-- EDITAR PAÍS -->
+
+                            <form
+                                action="/paises/<%= pais.pais_id %>/editar"
+                                method="POST"
+                                class="form-editar"
+                            >
+
+                                <input
+                                    type="text"
+                                    name="pais_descrion"
+                                    value="<%= pais.pais_descrion %>"
+                                    maxlength="50"
+                                    required
+                                >
+
+                                <button
+                                    type="submit"
+                                    class="btn-editar"
+                                >
+                                    Editar
+                                </button>
+
+                            </form>
+
+
+                            <!-- ELIMINAR PAÍS -->
+
+                            <form
+                                action="/paises/<%= pais.pais_id %>/eliminar"
+                                method="POST"
+                                class="form-editar"
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="btn-eliminar"
+                                    onclick="return confirm('¿Seguro que quieres eliminar este país? También se eliminarán sus provincias.')"
+                                >
+                                    Eliminar
+                                </button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+
+                <% }) %>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- ================================= -->
+    <!-- PROVINCIAS -->
+    <!-- ================================= -->
+
+    <div class="seccion">
+
+        <h2>Agregar provincia</h2>
+
+        <form action="/provincias" method="POST">
+
+            <select
+                name="pais_id"
+                required
+            >
+
+                <option value="">
+                    Seleccionar país
+                </option>
+
+                <% paises.forEach(pais => { %>
+
+                    <option value="<%= pais.pais_id %>">
+
+                        <%= pais.pais_descrion %>
+
+                    </option>
+
+                <% }) %>
+
+            </select>
+
+
+            <input
+                type="text"
+                name="pro_descripcion"
+                placeholder="Nombre de la provincia"
+                maxlength="50"
+                required
+            >
+
+
+            <button
+                type="submit"
+                class="btn-agregar"
+            >
+                Agregar provincia
+            </button>
+
+        </form>
+
+
+        <h2>Lista de provincias</h2>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>ID</th>
+
+                    <th>Provincia</th>
+
+                    <th>País</th>
+
+                    <th>Acciones</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <% provincias.forEach(provincia => { %>
+
+                    <tr>
+
+                        <td>
+                            <%= provincia.pro_id %>
+                        </td>
+
+                        <td>
+                            <%= provincia.pro_descripcion %>
+                        </td>
+
+                        <td>
+                            <%= provincia.pais_descrion %>
+                        </td>
+
+                        <td>
+
+                            <!-- EDITAR PROVINCIA -->
+
+                            <form
+                                action="/provincias/<%= provincia.pro_id %>/editar"
+                                method="POST"
+                                class="form-editar"
+                            >
+
+                                <select name="pais_id" required>
+
+                                    <% paises.forEach(pais => { %>
+
+                                        <option
+                                            value="<%= pais.pais_id %>"
+                                            <%= pais.pais_id === provincia.pais_id ? "selected" : "" %>
+                                        >
+
+                                            <%= pais.pais_descrion %>
+
+                                        </option>
+
+                                    <% }) %>
+
+                                </select>
+
+
+                                <input
+                                    type="text"
+                                    name="pro_descripcion"
+                                    value="<%= provincia.pro_descripcion %>"
+                                    maxlength="50"
+                                    required
+                                >
+
+
+                                <button
+                                    type="submit"
+                                    class="btn-editar"
+                                >
+                                    Editar
+                                </button>
+
+                            </form>
+
+
+                            <!-- ELIMINAR PROVINCIA -->
+
+                            <form
+                                action="/provincias/<%= provincia.pro_id %>/eliminar"
+                                method="POST"
+                                class="form-editar"
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="btn-eliminar"
+                                    onclick="return confirm('¿Seguro que quieres eliminar esta provincia?')"
+                                >
+                                    Eliminar
+                                </button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+
+                <% }) %>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
